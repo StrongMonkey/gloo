@@ -1,0 +1,7 @@
+changelog:
+  - type: BREAKING_CHANGE
+    description: >
+      Create `UpstreamDestination` type to parent `DestinationSpec` and `Subset` resources, which only applied to
+      `upstream` `Destination`s anyways.
+    issueLink: https://github.com/solo-io/gloo/issues/1171
+    resolvesIssue: false
