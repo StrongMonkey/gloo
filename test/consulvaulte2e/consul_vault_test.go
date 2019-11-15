@@ -207,7 +207,7 @@ var _ = Describe("Consul + Vault Configuration Happy Path e2e", func() {
 		proxyClient, err := gloov1.NewProxyClient(consulResources)
 		Expect(err).NotTo(HaveOccurred())
 
-		vs := makeSslVirtualService(writeNamespace, secret.Metadata.Ref())
+		vs := makeSslVirtualService(secret.Metadata.Ref())
 
 		vs, err = vsClient.Write(vs, clients.WriteOpts{Ctx: ctx})
 		Expect(err).NotTo(HaveOccurred())
@@ -243,7 +243,7 @@ var _ = Describe("Consul + Vault Configuration Happy Path e2e", func() {
 
 		us := core.ResourceRef{Namespace: "gloo-system", Name: "petstore"}
 
-		vs := makeFunctionRoutingVirtualService(writeNamespace, us, "findPetById")
+		vs := makeFunctionRoutingVirtualService(us, "findPetById")
 
 		vs, err = vsClient.Write(vs, clients.WriteOpts{Ctx: ctx})
 		Expect(err).NotTo(HaveOccurred())
@@ -263,11 +263,11 @@ var _ = Describe("Consul + Vault Configuration Happy Path e2e", func() {
 	})
 })
 
-func makeSslVirtualService(vsNamespace string, secret core.ResourceRef) *v1.VirtualService {
+func makeSslVirtualService(secret core.ResourceRef) *v1.VirtualService {
 	return &v1.VirtualService{
 		Metadata: core.Metadata{
 			Name:      "vs-ssl",
-			Namespace: vsNamespace,
+			Namespace: "default",
 		},
 		VirtualHost: &v1.VirtualHost{
 			Domains: []string{"*"},
@@ -299,11 +299,11 @@ func makeSslVirtualService(vsNamespace string, secret core.ResourceRef) *v1.Virt
 	}
 }
 
-func makeFunctionRoutingVirtualService(vsNamespace string, upstream core.ResourceRef, funcName string) *v1.VirtualService {
+func makeFunctionRoutingVirtualService(upstream core.ResourceRef, funcName string) *v1.VirtualService {
 	return &v1.VirtualService{
 		Metadata: core.Metadata{
 			Name:      "vs-functions",
-			Namespace: vsNamespace,
+			Namespace: "default",
 		},
 		VirtualHost: &v1.VirtualHost{
 			Domains: []string{"*"},

@@ -178,9 +178,10 @@ func GatewayContainsVirtualService(gateway *v1.Gateway, virtualService *v1.Virtu
 	virtualServiceRefs := httpGateway.VirtualServices
 
 	if len(virtualServiceRefs) == 0 {
-		// accept only virtual services in the same namespace as the gateway
+		// fall back to all virtual services in all watchNamespaces
+		// TODO: make this all vs in a single namespace
 		// https://github.com/solo-io/gloo/issues/1142
-		return gateway.Metadata.Namespace == virtualService.Metadata.Namespace
+		return true
 	}
 
 	vsRef := virtualService.Metadata.Ref()
